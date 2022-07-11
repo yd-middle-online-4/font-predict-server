@@ -1,0 +1,34 @@
+@font-face {
+  font-family: "maruburi";
+  src: url("../fonts/nanum-gomshin.ttf");
+}
+
+html {
+}
+
+.char-content {
+  font-family: "maruburi";
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+span {
+  font-size: 40px;
+}
+
+.char-cover {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+}
+
+/* Ensure the size of the image fit the container perfectly */
+img {
+  display: block;
+
+  /* This rule is very important, please don't ignore this */
+  max-width: 100%;
+}
