@@ -7,7 +7,6 @@
 - numpy
 - flask
 - flask_cors
-- pillow
 - tensorflow (또는 tensorflow-cpu)
 
 ## 사용법

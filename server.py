@@ -3,7 +3,6 @@ import pickle
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 import numpy as np
-from PIL import Image
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 
@@ -22,7 +21,7 @@ def load_model():
         [
             # Note the input shape is the desired size of the image 300x300 with 3 bytes color
             # This is the first convolution
-            tf.keras.layers.ZeroPadding2D(padding=1, input_shape=(64 * 5, 64, 1)),
+            tf.keras.layers.ZeroPadding2D(padding=1, input_shape=(64, 64 * 5, 1)),
             tf.keras.layers.Conv2D(64, (3, 3), activation="relu"),
             tf.keras.layers.MaxPooling2D(2, 2),
             # The second convolution
@@ -36,11 +35,11 @@ def load_model():
             # Flatten the results to feed into a DNN
             tf.keras.layers.Flatten(),
             # 1024 neuron hidden layer
-            tf.keras.layers.Dense(1024, activation="relu"),
+            tf.keras.layers.Dense(512, activation="relu"),
             # 1024 neuron hidden layer
-            tf.keras.layers.Dense(2048, activation="relu"),
+            tf.keras.layers.Dense(1024, activation="relu"),
             # Only 1 output neuron. It will contain a value from 0-1 where 0 for 1 class ('horses') and 1 for the other ('humans')
-            tf.keras.layers.Dense(10, activation="softmax"),
+            tf.keras.layers.Dense(120, activation="softmax"),
         ]
     )
     model.compile(optimizer="Adam", loss="categorical_crossentropy", metrics=["accuracy"])
@@ -48,7 +47,7 @@ def load_model():
 
 
 def load_weights(model):
-    saved_model_path = "instance/saved_models/base_line.hdf5"
+    saved_model_path = "instance/saved_models/cnn_weights_v2.hdf5"
     model.load_weights(saved_model_path)
     return model
 
@@ -63,9 +62,9 @@ def load_labels():
 def load_image():
     size = 64
     img_path = "instance/uploads/image.png"
-    img = image.load_img(img_path, color_mode="grayscale", target_size=(size * 5, size))
+    img = image.load_img(img_path, color_mode="grayscale", target_size=(size, size * 5))
     x = image.img_to_array(img)
-    x = x.reshape(1, size * 5, size, 1)
+    x = x.reshape(1, size, size * 5, 1)
     return x
 
 
